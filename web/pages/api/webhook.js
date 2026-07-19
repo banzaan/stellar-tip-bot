@@ -1,15 +1,7 @@
 import 'dotenv/config';
-import express from 'express';
 import { Bot, webhookCallback } from 'grammy';
 import { Horizon, TransactionBuilder, Contract, rpc, scValToNative, nativeToScVal, Keypair, Address } from '@stellar/stellar-sdk';
-const app = express();
-app.use(express.json());
-app.use(webhookCallback(bot, 'express'));
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
 const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN);
 const server = new Horizon.Server("https://horizon-testnet.stellar.org");
 const sorobanRpc = new rpc.Server('https://soroban-testnet.stellar.org');
