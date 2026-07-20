@@ -1,9 +1,7 @@
 // web/pages/index.js
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Contract, TransactionBuilder, rpc, nativeToScVal, Horizon, Address } from '@stellar/stellar-sdk';
-
-// Import our secure client-side helper functions
-import { checkConnection, retrievePublicKey, userSignTransaction } from '../components/Freighter';
+import { StellarWalletsKit, WalletNetwork, allowAllModules, FREIGHTER_ID } from '@creit.tech/stellar-wallets-kit';
 
 export default function Home() {
   const [tgUser, setTgUser] = useState(null);
@@ -14,31 +12,41 @@ export default function Home() {
   const [approveLoading, setApproveLoading] = useState(false);
   const [status, setStatus] = useState('');
   const [statusType, setStatusType] = useState('info'); 
-  const telegramBtnRef = useRef(null);
+  const [telegramLoginUrl, setTelegramLoginUrl] = useState('#');
 
   const sorobanRpc = new rpc.Server('https://soroban-testnet.stellar.org');
   const networkPassphrase = 'Test SDF Network ; September 2015';
 
-  useEffect(() => {
-    const botUsername = process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || "YourAwesomeTipBot";
-    
-    const script = document.createElement('script');
-    script.src = "https://telegram.org/js/telegram-widget.js?22";
-    script.setAttribute('data-telegram-login', botUsername);
-    script.setAttribute('data-size', 'large');
-    script.setAttribute('data-radius', '12');
-    script.setAttribute('data-request-access', 'write');
-    script.setAttribute('data-userpic', 'false');
-    
-    window.onTelegramAuth = (user) => {
-      setTgUser(user);
-      updateStatus('✅ Telegram authentication successful!', 'success');
-    };
-    script.setAttribute('data-onauth', 'onTelegramAuth(user)');
+  const [kit] = useState(() => new StellarWalletsKit({
+    network: WalletNetwork.TESTNET,
+    selectedWalletId: FREIGHTER_ID,
+    modules: allowAllModules(),
+  }));
 
-    if (telegramBtnRef.current) {
-      telegramBtnRef.current.innerHTML = ''; 
-      telegramBtnRef.current.appendChild(script);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const queryParams = new URLSearchParams(window.location.search);
+    const id = queryParams.get('id');
+    const first_name = queryParams.get('first_name');
+    const username = queryParams.get('username');
+    const auth_date = queryParams.get('auth_date');
+    const hash = queryParams.get('hash');
+
+    if (id && hash) {
+      const userObj = { id, first_name, username, auth_date, hash };
+      setTgUser(userObj);
+      updateStatus('✅ Telegram authentication verified on client!', 'success');
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    const botId = process.env.NEXT_PUBLIC_TELEGRAM_BOT_ID || "";
+    if (botId) {
+      const originUrl = window.location.origin;
+      const currentUrl = window.location.href.split('?')[0];
+      setTelegramLoginUrl(
+        `https://oauth.telegram.org/auth?bot_id=${botId}&origin=${encodeURIComponent(originUrl)}&return_to=${encodeURIComponent(currentUrl)}`
+      );
     }
   }, []);
 
@@ -62,22 +70,21 @@ export default function Home() {
 
   const connectWallet = async () => {
     try {
-      const allowed = await checkConnection();
-      if (!allowed) {
-        updateStatus("❌ Permission denied by Freighter wallet.", "error");
-        return;
-      }
-
-      const key = await retrievePublicKey();
-      if (key) {
-        setWalletAddress(key);
-        updateStatus('✅ Freighter wallet connected successfully.', 'success');
-        await fetchWalletBalance(key); 
-      } else {
-        updateStatus('❌ Connection requested, but no wallet address was returned.', 'error');
-      }
+      await kit.openModal({
+        onWalletSelected: async (option) => {
+          try {
+            kit.setWallet(option.id);
+            const publicKey = await kit.getPublicKey();
+            setWalletAddress(publicKey);
+            updateStatus(`✅ Connected to ${option.name} successfully.`, 'success');
+            await fetchWalletBalance(publicKey);
+          } catch (err) {
+            updateStatus(`❌ Failed to connect to ${option.name}: ${err.message}`, 'error');
+          }
+        }
+      });
     } catch (err) {
-      updateStatus(`Wallet connection error: ${err.message}`, 'error');
+      updateStatus(`Wallet selection error: ${err.message}`, 'error');
     }
   };
 
@@ -128,17 +135,19 @@ export default function Home() {
       .build();
 
       const preparedTx = await sorobanRpc.prepareTransaction(tx);
-      updateStatus('🔑 Please sign the Approve transaction in Freighter...', 'info');
+      updateStatus('🔑 Please sign the Approve transaction in your wallet...', 'info');
 
-      const signedResult = await userSignTransaction(preparedTx.toXDR());
+      const signedResult = await kit.signTransaction(preparedTx.toXDR(), {
+        networkPassphrase: networkPassphrase
+      });
 
       let signedXdrString = '';
-      if (signedResult && typeof signedResult === 'object' && signedResult.signedTxXdr) {
+      if (typeof signedResult === 'object' && signedResult.signedTxXdr) {
         signedXdrString = signedResult.signedTxXdr; 
       } else if (typeof signedResult === 'string') {
         signedXdrString = signedResult; 
       } else {
-        throw new Error("Invalid signature format returned from Freighter wallet.");
+        throw new Error("Invalid signature format returned from wallet.");
       }
 
       updateStatus('🚀 Submitting Approve transaction to Soroban...', 'info');
@@ -160,51 +169,64 @@ export default function Home() {
     }
   };
 
+  const handleMerge = async () => {
+    if (!walletAddress || !tgUser) return updateStatus('❌ Connect wallet & Telegram first.', 'error');
 
-const handleMerge = async () => {
-  if (!walletAddress || !tgUser) return updateStatus('❌ Connect wallet & Telegram first.', 'error');
+    setLoading(true);
+    updateStatus('⏳ Preparing contract link transaction...', 'info');
 
-  setLoading(true);
-  try {
-    const prepRes = await fetch('/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'PREPARE', tgData: tgUser, userAddress: walletAddress })
-    });
-    const { xdr } = await prepRes.json();
-    
-    if (!xdr) throw new Error("Failed to receive XDR from server");
+    try {
+      const prepRes = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'PREPARE', tgData: tgUser, userAddress: walletAddress })
+      });
+      
+      const resJson = await prepRes.json();
+      if (!prepRes.ok) {
+        throw new Error(resJson.error || "Failed to prepare transaction on server");
+      }
 
-    updateStatus('🔑 Please sign in Freighter...', 'info');
-    const signedResult = await userSignTransaction(xdr);
-    const signedXdr = typeof signedResult === 'object' ? signedResult.signedTxXdr : signedResult;
+      const { xdr } = resJson;
+      if (!xdr) throw new Error("Failed to receive XDR from server");
 
-    const finalRes = await fetch('/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'FINALIZE', xdr: signedXdr }) 
-    });
-    
-    const resData = await finalRes.json();
-    if (resData.success) {
-      updateStatus(`🎉 Linked! `, 'success');
-    } else {
-      throw new Error(resData.error || "Submission failed");
+      updateStatus('🔑 Please sign the Link transaction in your wallet...', 'info');
+      
+      const signedResult = await kit.signTransaction(xdr, {
+        networkPassphrase: networkPassphrase
+      });
+      const signedXdr = typeof signedResult === 'object' && signedResult.signedTxXdr ? signedResult.signedTxXdr : signedResult;
+
+      updateStatus('🚀 Finalizing and submitting to Soroban...', 'info');
+      const finalRes = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'FINALIZE', xdr: signedXdr }) 
+      });
+      
+      const resData = await finalRes.json();
+      if (!finalRes.ok) {
+        throw new Error(resData.error || "Submission failed");
+      }
+
+      if (resData.success) {
+        updateStatus(`🎉 Successfully linked Telegram @${tgUser.username || tgUser.first_name} to your Stellar wallet!`, 'success');
+      } else {
+        throw new Error("Link transaction failed on-chain.");
+      }
+    } catch (error) {
+      updateStatus(`❌ Error: ${error.message}`, 'error');
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    updateStatus(`❌ Error: ${error.message}`, 'error');
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col items-center justify-center p-4" dir="ltr">
       <div className="w-full max-w-md bg-slate-800 rounded-2xl shadow-xl border border-slate-700 p-6 md:p-8 space-y-6">
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-bold text-sky-400">Stellar Wallet Linking Portal 🌐</h1>
-          <p className="text-sm text-slate-400">Link your Telegram ID and grant instant tipping access.</p>
+          <p className="text-sm text-slate-400">Link your Telegram ID and grant instant tipping access securely.</p>
         </div>
 
         <hr className="border-slate-700" />
@@ -213,11 +235,16 @@ const handleMerge = async () => {
           <h3 className="text-md font-medium text-slate-200">Step 1: Telegram Verification</h3>
           {tgUser ? (
             <div className="bg-sky-950/50 border border-sky-500/30 text-sky-300 p-3 rounded-xl flex items-center justify-between">
-              <span>Logged in as: <strong className="font-semibold">@{tgUser.username}</strong></span>
-              <span className="text-emerald-400 font-bold">✓</span>
+              <span>Logged in as: <strong className="font-semibold">@{tgUser.username || tgUser.first_name}</strong></span>
+              <span className="text-emerald-400 font-bold">✓ Verified</span>
             </div>
           ) : (
-            <div className="flex justify-center p-2 bg-slate-750 rounded-xl" ref={telegramBtnRef}></div>
+            <a 
+              href={telegramLoginUrl}
+              className="w-full flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-4 rounded-xl transition duration-200 text-center shadow-md"
+            >
+              <span>Login with Telegram 🚀</span>
+            </a>
           )}
         </div>
 
@@ -231,7 +258,7 @@ const handleMerge = async () => {
                 : 'bg-indigo-600 hover:bg-indigo-700 text-white'
             }`}
           >
-            {walletAddress ? 'Wallet Connected ✓' : 'Connect Freighter'}
+            {walletAddress ? 'Wallet Connected ✓' : 'Connect a Wallet'}
           </button>
           {walletAddress && (
             <div className="space-y-1">
