@@ -41,7 +41,7 @@ bot.command('tip', async (ctx) => {
     amount = parseFloat(parts[1]); 
   } else {
   const parts = ctx.message.text.split(/\s+/);
-  if (parts.length < 3) return ctx.reply('❌ Format: /tip @username amount');
+  if (parts.length < 3) return ctx.reply('❌ Format: /tip amount');
   const targetUsername = parts[1].replace('@', '').trim();
   const amount = parseFloat(parts[2]);
   if (isNaN(amount) || amount <= 0) return ctx.reply('❌ Invalid amount.');
@@ -88,7 +88,7 @@ if (simulation.result?.auth) {
       ctx.reply(`❌ Blockchain Error.`);
     }
   } catch (error) {
-    ctx.reply(`❌ Error: ${error.message}`);
+    ctx.reply(`❌ Error:you shout approve limit before tiping`);
   }
 });
 
