@@ -5,7 +5,7 @@
 ## Project Overview & Quick Links
 
 * Live Demo Link: [https://stellar-tip-bot-production.up.railway.app/](https://stellar-tip-bot-production.up.railway.app/)
-* Demo Video Link (1-2 minutes): [Insert Demo Video Link Here]
+* Demo Video Link (1-2 minutes): [Demo Video]
 * Public GitHub Repository: [https://github.com/banzaan/stellar-tip-bot](https://github.com/banzaan/stellar-tip-bot)
 * Primary Tech Stack: JavaScript (83.3%), Rust (14.9%), CSS (1.8%), Stellar Soroban SDK.
 
@@ -28,8 +28,8 @@
 * [x] Live demo link (Hosted on Railway)
 * [x] Contract deployment address (Registry & Processor provided)
 * [x] Transaction hash for contract interaction (Provided)
-* [ ] Screenshot showing:
-* [ ] Mobile responsive UI
+* [x] Screenshot showing:
+* [x] Mobile responsive UI
 * [ ] CI/CD pipeline running (GitHub Actions)
 * [ ] Test output with 3+ passing tests
 * [ ] Demo video link (1-2 minutes)
@@ -134,9 +134,15 @@ npm run start
 
 ## Proof & Visual Documentation
 
-### Mobile Responsive UI Screenshot
+### Mobile & desktop Responsive UI Screenshot
 
-> [mobile layout view screenshot here]
+![Mobile UI 1](https://raw.githubusercontent.com/banzaan/stellar-tip-bot/main/assets/photo_5978671489550585198_y.jpg)
+
+![desktop UI 3](https://raw.githubusercontent.com/banzaan/stellar-tip-bot/main/assets/photo_5978671489550585201_y.jpg)
+
+![Multi wallet UI 4](https://raw.githubusercontent.com/banzaan/stellar-tip-bot/main/assets/photo_5978671489550585202_y.jpg)
+
+
 
 ### CI/CD Pipeline Running Screenshot
 
@@ -144,4 +150,5 @@ npm run start
 
 ### Test Output Screenshot (3+ Passing Tests)
 
-> [terminal output with passing Rust tests screenshot here]
+> ![test output](https://raw.githubusercontent.com/banzaan/stellar-tip-bot/main/assets/photo_5978671489550585199_y.jpg)
+> ![test output](https://raw.githubusercontent.com/banzaan/stellar-tip-bot/main/assets/photo_5978671489550585203_y.jpg)
