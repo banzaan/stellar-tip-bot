@@ -30,8 +30,8 @@
 * [x] Transaction hash for contract interaction (Provided)
 * [x] Screenshot showing:
 * [x] Mobile responsive UI
-* [ ] CI/CD pipeline running (GitHub Actions)
-* [ ] Test output with 3+ passing tests
+* [x] CI/CD pipeline running (GitHub Actions)
+* [x] Test output with 3+ passing tests
 * [ ] Demo video link (1-2 minutes)
 
 ## Advanced Technical Architecture & Implementation
@@ -146,7 +146,7 @@ npm run start
 
 ### CI/CD Pipeline Running Screenshot
 
-> [ green checkmarks on GitHub Actions workflow screenshot here]
+> ![ green checkmarks on GitHub Actions workflow](https://github.com/banzaan/stellar-tip-bot/blob/main/assets/IMG_20260721_143330.png)
 
 ### Test Output Screenshot (3+ Passing Tests)
 
