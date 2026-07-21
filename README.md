@@ -32,7 +32,7 @@
 * [x] Mobile responsive UI
 * [x] CI/CD pipeline running (GitHub Actions)
 * [x] Test output with 3+ passing tests
-* [ ] Demo video link (1-2 minutes)
+* [x] Demo video link (1-2 minutes)
 
 ## Advanced Technical Architecture & Implementation
 
