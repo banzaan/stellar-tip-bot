@@ -1,6 +1,7 @@
 // web/pages/index.js
 import { useState, useEffect, useRef } from 'react';
 import { Contract, TransactionBuilder, rpc, nativeToScVal, Horizon, Address } from '@stellar/stellar-sdk';
+import { StellarWalletsKit, WalletNetwork, allowAllModules, FREIGHTER_ID } from '@creit.tech/stellar-wallets-kit';
 
 // Import our secure client-side helper functions
 import { checkConnection, retrievePublicKey, userSignTransaction } from '../components/Freighter';
@@ -15,9 +16,13 @@ export default function Home() {
   const [status, setStatus] = useState('');
   const [statusType, setStatusType] = useState('info'); 
   const telegramBtnRef = useRef(null);
-
   const sorobanRpc = new rpc.Server('https://soroban-testnet.stellar.org');
   const networkPassphrase = 'Test SDF Network ; September 2015';
+  const [kit] = useState(() => new StellarWalletsKit({
+    network: WalletNetwork.TESTNET,
+    selectedWalletId: FREIGHTER_ID,
+    modules: allowAllModules(),
+  }));
 
   useEffect(() => {
     const botUsername = process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || "YourAwesomeTipBot";
@@ -61,7 +66,7 @@ export default function Home() {
   };
 
   const connectWallet = async () => {
-    try {
+   /* try {
       const allowed = await checkConnection();
       if (!allowed) {
         updateStatus("❌ Permission denied by Freighter wallet.", "error");
@@ -78,6 +83,27 @@ export default function Home() {
       }
     } catch (err) {
       updateStatus(`Wallet connection error: ${err.message}`, 'error');
+    }
+
+    *//////////////////
+
+    try {
+      await kit.openModal({
+        onWalletSelected: async (option) => {
+          try {
+            kit.setWallet(option.id);
+            let publicKey = await kit.getAddress();
+            publicKey =typeof publicKey === 'object' && publicKey !== null ? publicKey.address : publicKey;
+            setWalletAddress(publicKey);
+            updateStatus(`✅ Connected to ${option.name} successfully.`, 'success');
+            await fetchWalletBalance(publicKey);
+          } catch (err) {
+            updateStatus(`❌ Failed to connect to ${option.name}: ${err.message}`, 'error');
+          }
+        }
+      });
+    } catch (err) {
+      updateStatus(`Wallet selection error: ${err.message}`, 'error');
     }
   };
 
