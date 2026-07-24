@@ -11,7 +11,7 @@ const botKeyPair = Keypair.fromSecret(process.env.BOT_OPERATOR_SECRET);
 async function getWalletByUsername(username) {
   try {
     const registryContract = new Contract(process.env.REGISTRY_CONTRACT_ID);
-    const formattedUsername = username.toLowerCase().replace('@', '').trim();
+    const formattedUsername = username.replace('@', '').trim();
     
     let account = await server.loadAccount(botKeyPair.publicKey());
     const tx = new TransactionBuilder(account, { fee: '10000', networkPassphrase })
