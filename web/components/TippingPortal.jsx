@@ -34,6 +34,9 @@ export default function TippingPortal() {
     
     window.onTelegramAuth = (user) => {
       setTgUser(user);
+       if (user && user.first_name) {
+        localStorage.setItem('telegram_username', user.first_name);
+      }
       updateStatus('Telegram authentication successful!', 'success');
     };
     script.setAttribute('data-onauth', 'onTelegramAuth(user)');
@@ -87,7 +90,6 @@ export default function TippingPortal() {
     }
   };
 
-  // تابع یکپارچه و هوشمند امضا با کیت استلار (بدون وابستگی به فریتر)
   const signTransactionWithKit = async (xdr) => {
     try {
       const signed = await kit.signTransaction(xdr, {
@@ -143,7 +145,7 @@ export default function TippingPortal() {
 
       const preparedTx = await sorobanRpc.prepareTransaction(tx);
       
-      // استفاده از کیت استلار به جای تابع فریتر
+  
       const signedXdrString = await signTransactionWithKit(preparedTx.toXDR());
 
       const transactionToSubmit = TransactionBuilder.fromXDR(signedXdrString, networkPassphrase);
@@ -173,7 +175,7 @@ export default function TippingPortal() {
       const { xdr } = await prepRes.json();
       if (!xdr) throw new Error("Failed to receive XDR from server");
 
-      // استفاده از کیت استلار برای امضا
+    
       const signedXdr = await signTransactionWithKit(xdr);
 
       const finalRes = await fetch('/api/register', {
