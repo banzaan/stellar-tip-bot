@@ -1,0 +1,24 @@
+name: Build Soroban Contract
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Nightly Rust
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          targets: wasm32v1-none
+
+      - name: Build Contract
+        run: |
+          cd telegram_registry_contract
+          cargo build --target wasm32v1-none --release
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: contract-wasm
+          path: telegram_registry_contract/target/wasm32v1-none/release/*.wasm
