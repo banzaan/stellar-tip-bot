@@ -136,19 +136,19 @@ npm run start
 
 ### Mobile & desktop Responsive UI Screenshot
 
-![Mobile UI 1](https://raw.githubusercontent.com/banzaan/stellar-tip-bot/main/assets/photo_5978671489550585198_y.jpg)
+![Mobile UI 1](https://github.com/banzaan/stellar-tip-bot/blob/main/assets/photo_5978671489550585199_y%20(2).jpg)
 
-![desktop UI 3](https://raw.githubusercontent.com/banzaan/stellar-tip-bot/main/assets/photo_5978671489550585201_y.jpg)
+![desktop UI 3](https://github.com/banzaan/stellar-tip-bot/blob/main/assets/photo_5987681398929690523_w.jpg)
 
-![Multi wallet UI 4](https://raw.githubusercontent.com/banzaan/stellar-tip-bot/main/assets/photo_5978671489550585202_y.jpg)
+![Multi wallet UI 4](https://github.com/banzaan/stellar-tip-bot/blob/main/assets/photo_5987681398929690524_w.jpg)
 
 
 
 ### CI/CD Pipeline Running Screenshot
 
-> ![ green checkmarks on GitHub Actions workflow](https://github.com/banzaan/stellar-tip-bot/blob/main/assets/IMG_20260721_143330.png)
+> ![ green checkmarks on GitHub Actions workflow](https://github.com/banzaan/stellar-tip-bot/blob/main/assets/IMG_20260721_143330%20(1).png)
 
 ### Test Output Screenshot (3+ Passing Tests)
 
-> ![test output](https://raw.githubusercontent.com/banzaan/stellar-tip-bot/main/assets/photo_5978671489550585199_y.jpg)
-> ![test output](https://raw.githubusercontent.com/banzaan/stellar-tip-bot/main/assets/photo_5978671489550585203_y.jpg)
+> ![test output](https://github.com/banzaan/stellar-tip-bot/blob/main/assets/photo_5987681398929690572_y.jpg)
+> ![test output](https://github.com/banzaan/stellar-tip-bot/blob/main/assets/photo_5987681398929690589_y.jpg)
