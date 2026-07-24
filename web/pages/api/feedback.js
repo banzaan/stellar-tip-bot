@@ -1,7 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 
-const FEEDBACK_FILE_PATH = path.join(process.cwd(), 'feedbacks.json');
+const isProduction = process.env.RAILWAY_ENVIRONMENT || process.env.NODE_ENV === 'production';
+const FEEDBACK_FILE_PATH = isProduction 
+  ? '/app/data/feedbacks.json' 
+  : path.join(process.cwd(), 'feedbacks.json');
 
 
 function sanitizeText(str) {
@@ -10,11 +13,18 @@ function sanitizeText(str) {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .replace(/"/g, "&quot;");
 }
 
 export default async function handler(req, res) {
+  try {
+    if (!fs.existsSync(FEEDBACK_FILE_PATH)) {
+      fs.writeFileSync(FEEDBACK_FILE_PATH, JSON.stringify([], null, 2), 'utf8');
+    }
+  } catch (err) {
+    console.error('Error initializing feedback file:', err);
+  }
+
   if (req.method === 'POST') {
     try {
       let { telegramName, feedbackText } = req.body;
@@ -31,7 +41,11 @@ export default async function handler(req, res) {
 
       
       const safeFeedback = sanitizeText(feedbackText.trim());
-      const safeTelegramName = sanitizeText(telegramName ? telegramName.trim() : 'Anonymous');
+      const safeTelegramName = sanitizeText(
+        telegramName && telegramName !== 'Anonymous User' && telegramName.trim() !== '' 
+          ? telegramName.trim() 
+          : 'Telegram User'
+      );
 
       let feedbacks = [];
       if (fs.existsSync(FEEDBACK_FILE_PATH)) {
