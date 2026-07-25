@@ -227,7 +227,6 @@ export default function TippingPortal() {
                         alignItems: 'center',
                         color: '#fff'
                       }}>
-                        <span>Logged in as: <strong style={{ fontWeight: '600' }}>@{tgUser.username}</strong></span>
                         <span style={{ color: '#fff', fontWeight: 'bold' }}>✓</span>
                       </div>
                     ) : (
@@ -259,6 +258,14 @@ export default function TippingPortal() {
                     >
                       {walletAddress ? `${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)} : ${balance.toFixed(2)} XLM` : 'Connect Wallet'}
                     </button>
+                    <a 
+    href="https://lab.stellar.org/account/fund?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;;/" 
+    target="_blank" 
+    rel="noopener noreferrer"
+    style={{ color: '#a78bfa', fontSize: '13px', textDecoration: 'underline' }}
+  >
+    Need test tokens? Get free XLM from Friendbot ↗
+  </a>
                   </div>
                 </div>
 
@@ -287,6 +294,9 @@ export default function TippingPortal() {
                       {loading ? 'Processing Sync...' : 'Merge Telegram ID & Wallet'}
                     </button>
                   </div>
+                  <div style={{ marginTop: '8px', textAlign: 'center' }}>
+
+</div>
                 </div>
 
                 {/* Approve Limit */}
