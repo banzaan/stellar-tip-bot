@@ -4,7 +4,7 @@
 
 ## Project Overview & Quick Links
 
-* Live Demo Link: [https://stellar-tip-bot-production.up.railway.app/](https://stellar-tip-bot-production.up.railway.app/)
+* Live Demo Link: [http://stellartipbot.duckdns.org/)
 * Demo Video Link (1-2 minutes): [https://github.com/banzaan/stellar-tip-bot/blob/main/assets/document_5980801530876402962.mp4]
 * Public GitHub Repository: [https://github.com/banzaan/stellar-tip-bot](https://github.com/banzaan/stellar-tip-bot)
 * Primary Tech Stack: JavaScript (83.3%), Rust (14.9%), CSS (1.8%), Stellar Soroban SDK.
