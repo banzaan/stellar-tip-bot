@@ -19,7 +19,6 @@ function readCache() {
   return null;
 }
 
-// نوشتن کش روی فایل
 function writeCache(data) {
   try {
     fs.writeFileSync(CACHE_FILE_PATH, JSON.stringify(data, null, 2), 'utf8');
@@ -31,7 +30,20 @@ function writeCache(data) {
 async function updateAnalyticsData() {
   try {
     const operatorAddress = process.env.NEXT_PUBLIC_OPERATOR_ADDRESS || "GCT2EGRCG7W5T3HGG2DFR2PBR65BZHIUBLO6DP3SVGHXTBIXNH3SX7YT";
+    const contractId = process.env.NEXT_PUBLIC_REGISTRY_CONTRACT_ID  || "CBJV7U6RZW7VWUVP5CMNYXOVY3H45ZYHEP6VAQYWQKI5JSBBTDO4EMLE"; 
     const server = new Horizon.Server("https://horizon-testnet.stellar.org");
+
+    let linkAddressCount = 0;
+    try {
+      const response = await fetch(`https://api.stellar.expert/explorer/testnet/contract/${contractId}`);
+      const contractData = await response.json();
+      if (contractData && typeof contractData.storage_entries === 'number') {
+        linkAddressCount = contractData.storage_entries;
+      }
+    } catch (apiErr) {
+      console.error("Failed to fetch from stellar.expert API:", apiErr);
+      linkAddressCount = 0;
+    }
 
     const startDate = new Date("2026-07-12T00:00:00Z");
 
@@ -75,7 +87,6 @@ async function updateAnalyticsData() {
     }
 
     let processTipCount = 0;
-    let linkAddressCount = 0;
     let totalAllowanceAmount = 0;
     let totalVolumeAmount = 0;
     const totalTransactions = allTransactions.length;
@@ -108,8 +119,6 @@ async function updateAnalyticsData() {
                     }
                   } catch (err) {}
                 }
-              } else if (functionName.includes('link_address')) {
-                linkAddressCount++;
               } else if (functionName.includes('approve')) {
                 const i128Params = op.parameters.filter(p => p.type === 'I128' && p.value);
                 if (i128Params.length > 0) {
