@@ -93,7 +93,7 @@ if (simulation.result?.auth) {
 });
 
 bot.command('start', async (ctx) => {
-  const webAppUrl = process.env.WEB_APP_URL || 'https://stellar-tip-bot-production.up.railway.app/'; 
+  const webAppUrl = process.env.WEB_APP_URL || 'http://stellartipbot.duckdns.org/'; 
 
   const welcomeMessage = 
     `👋 Welcome to Stellar Tip Bot!\n\n` +
