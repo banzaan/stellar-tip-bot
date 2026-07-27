@@ -63,6 +63,14 @@ export default function Testimonial() {
                 don’t take our word for it (our moms are biased anyway).
                 here is what the community actually thinks. From minor bugs conquered to massive tips flying around see why hundreds of users call this home.
               </p>
+              <a 
+                      href="https://docs.google.com/forms/d/e/1FAIpQLSc5Q4uROaGu3Wky3zDwkjceVriuwLWh3_ylL760lJXGn8Z9fg/viewform?usp=header" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      style={{ color: '#FFC000', fontSize: '16px', textDecoration: 'underline' }}
+                    >
+                      fill this google form and help us to improve project
+                    </a>
             </div>
           </div>
         </div>
