@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StellarTipBot | Decentralized Social Tipping Pitch</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfbf7;
+            color: #1e293b;
+            scroll-behavior: smooth;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        .nav-link.active {
+            color: #d97706;
+            border-bottom: 2px solid #d97706;
+        }
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .step-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .step-indicator.active {
+            background: #d97706;
+            transform: scale(1.3);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Chosen Palette: Warm Sand & Slate (Fdfbf7, Slate-800, Amber-600) -->
+    <!-- Application Structure Plan: 
+        A structured, dashboard-style SPA designed for clarity and impact. 
+        It uses a tabbed navigation system to break the pitch into digestible sections:
+        - Executive Overview (Hero + Problem/Solution)
+        - Market Potential (Data Visualization for gas fees)
+        - Architecture (Interactive system flow showing multi-wallet support)
+        - Strategy & Future (Roadmap and growth tactics)
+        This structure ensures judges can quickly find specific information without a linear scroll.
+    -->
+    <!-- Visualization & Content Choices: 
+        1. Fee Comparison Chart (Chart.js): Visual proof of Stellar's micro-transaction viability vs Ethereum/Polygon.
+        2. System Diagram (HTML/Tailwind): A custom-built flow diagram showing the link between Social APIs, Soroban, and various wallets (Freighter/Albedo).
+        3. Strategic Icons: Using high-quality layout grouping for the growth strategy.
+        4. Interactive Timeline: A vertical roadmap for future milestones.
+        CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-orange-100">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center text-white font-bold italic">S</div>
+                <span class="font-bold text-xl tracking-tight text-slate-800">StellarTipBot</span>
+            </div>
+            <div class="hidden md:flex space-x-8 text-sm font-semibold text-slate-500">
+                <button onclick="switchTab('overview')" class="nav-link active py-2 transition" id="tab-overview">Overview</button>
+                <button onclick="switchTab('market')" class="nav-link py-2 transition" id="tab-market">Market</button>
+                <button onclick="switchTab('tech')" class="nav-link py-2 transition" id="tab-tech">Architecture</button>
+                <button onclick="switchTab('roadmap')" class="nav-link py-2 transition" id="tab-roadmap">Roadmap</button>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="hidden lg:block text-[10px] uppercase font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">v1.0.0 testnet Ready</span>
+                <button class="bg-slate-900 text-white px-5 py-2.5 rounded-full text-xs font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-200" link="https://github.com/banzaan/stellar-tip-bot/tree/main">GitHub Repository</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 max-w-6xl mx-auto px-6">
+        
+        <!-- Tab: Overview -->
+        <section id="content-overview" class="fade-in space-y-16">
+            <div class="text-center max-w-4xl mx-auto">
+                <span class="inline-block px-4 py-1.5 mb-6 text-xs font-bold tracking-widest text-amber-700 bg-amber-100 rounded-full">TRANSFORMING SOCIALFI</span>
+                <h1 class="text-5xl md:text-6xl font-bold text-slate-900 leading-tight mb-8">Decentralized Social Tipping Bridge</h1>
+                <p class="text-xl text-slate-600 leading-relaxed mb-10">We are building the first trustless infrastructure that cryptographically links social identities to the Stellar network, enabling seamless micro-transactions across the social web.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <div class="bg-white p-10 rounded-3xl border border-orange-100 shadow-sm relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h3 class="text-2xl font-bold mb-6 text-slate-800">Problem Statement</h3>
+                        <p class="text-slate-600 leading-loose mb-6">Social identities are currently siloed from financial tools. Existing "tipping bots" are centralized intermediaries that pose significant custodial risks. Users are forced to manually share long wallet addresses, creating high friction and security vulnerabilities.</p>
+                        <div class="flex gap-2">
+                            <span class="bg-red-50 text-red-700 px-3 py-1 rounded text-xs font-semibold">Fragile Security</span>
+                            <span class="bg-red-50 text-red-700 px-3 py-1 rounded text-xs font-semibold">Custodial Risk</span>
+                            <span class="bg-red-50 text-red-700 px-3 py-1 rounded text-xs font-semibold">User Friction</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-amber-600 p-10 rounded-3xl shadow-xl shadow-amber-100">
+                    <h3 class="text-2xl font-bold mb-6 text-white">Our Solution</h3>
+                    <p class="text-amber-50 leading-loose mb-6">A non-custodial bridge connecting Telegram and X identities directly to Soroban Smart Contracts. By utilizing decentralized registry principles, we ensure that funds move directly from sender to receiver without any middleman holding the private keys.</p>
+                    <div class="flex gap-2">
+                        <span class="bg-white/20 text-white px-3 py-1 rounded text-xs font-semibold">100% On-Chain</span>
+                        <span class="bg-white/20 text-white px-3 py-1 rounded text-xs font-semibold">Soroban-Powered</span>
+                        <span class="bg-white/20 text-white px-3 py-1 rounded text-xs font-semibold">Trustless</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab: Market -->
+        <section id="content-market" class="hidden fade-in space-y-16">
+            <div class="bg-white p-10 md:p-16 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50">
+                <div class="max-w-3xl mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-6">Market Opportunity: The Micro-Economy</h2>
+                    <p class="text-slate-600 text-lg">Social tipping requires transaction costs to be lower than the tip itself. Stellar is the only network where sending $0.05 is economically viable, making it the perfect home for SocialFi.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <div class="chart-container border border-slate-50 p-6 rounded-2xl bg-slate-50/50">
+                        <canvas id="marketChart"></canvas>
+                    </div>
+                    <div class="space-y-8">
+                        <div class="group">
+                            <h4 class="text-amber-600 font-bold mb-2 uppercase text-xs tracking-widest">Scalability</h4>
+                            <p class="font-bold text-xl text-slate-800 mb-2">Sub-second Confirmation</p>
+                            <p class="text-slate-500 text-sm">Tipping should be as instant as a 'Like'. Our bridge processes transactions in under 5 seconds.</p>
+                        </div>
+                        <div class="group">
+                            <h4 class="text-amber-600 font-bold mb-2 uppercase text-xs tracking-widest">Monetization</h4>
+                            <p class="font-bold text-xl text-slate-800 mb-2">Creator Independence</p>
+                            <p class="text-slate-500 text-sm">Capturing the long-tail of micro-transactions that are currently lost to platform fees or high gas costs.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab: Tech -->
+        <section id="content-tech" class="hidden fade-in space-y-16">
+            <div class="text-center">
+                <h2 class="text-4xl font-bold text-slate-900 mb-4">Architecture & Interoperability</h2>
+                <p class="text-slate-600">Secure, distributed, and multi-wallet by design.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-slate-900 text-white p-8 rounded-3xl">
+                    <div class="text-2xl mb-4">🔌</div>
+                    <h4 class="font-bold text-lg mb-4">Multi-Wallet Connector</h4>
+                    <p class="text-slate-400 text-sm leading-loose">Full support for the Stellar ecosystem. Users can connect via <strong>Freighter</strong>, <strong>Albedo</strong>, <strong>Rabe</strong>, or <strong>LOBSTR</strong>. Our interface automatically detects the best available signer for the browser.</p>
+                </div>
+                <div class="bg-white border border-slate-200 p-8 rounded-3xl">
+                    <div class="text-2xl mb-4">📜</div>
+                    <h4 class="font-bold text-lg mb-4 text-slate-800">Soroban Registry</h4>
+                    <p class="text-slate-600 text-sm leading-loose">Built with Rust for formal security. The registry contract manages the mapping between social IDs and public keys entirely on-chain without an external database.</p>
+                </div>
+                <div class="bg-white border border-slate-200 p-8 rounded-3xl">
+                    <div class="text-2xl mb-4">🛡️</div>
+                    <h4 class="font-bold text-lg mb-4 text-slate-800">Non-Custodial Flows</h4>
+                    <p class="text-slate-600 text-sm leading-loose">Transactions are constructed on the client-side and sent to the network only after the user's wallet signature. The bridge never sees or touches your private keys.</p>
+                </div>
+            </div>
+
+            <!-- Visual Flow Diagram -->
+            <div class="p-8 bg-amber-50 rounded-3xl border border-amber-100">
+                <h5 class="text-center font-bold text-amber-900 mb-8 uppercase text-xs tracking-tighter">System Data Flow</h5>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-6">
+                    <div class="px-6 py-4 bg-white border border-amber-200 rounded-xl text-sm font-bold shadow-sm">Social Auth (Telegram/X)</div>
+                    <div class="text-amber-400 text-xl font-bold hidden md:block">→</div>
+                    <div class="px-6 py-4 bg-amber-600 text-white rounded-xl text-sm font-bold shadow-md">Wallet Signer (Albedo/Freighter)</div>
+                    <div class="text-amber-400 text-xl font-bold hidden md:block">→</div>
+                    <div class="px-6 py-4 bg-slate-800 text-white rounded-xl text-sm font-bold shadow-md">Soroban Contract Execute</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab: Roadmap -->
+        <section id="content-roadmap" class="hidden fade-in space-y-16">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-slate-900 mb-4">Growth & Roadmap</h2>
+                <p class="text-slate-600">The journey from prototype to global social standard.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20">
+                <div class="space-y-10">
+                    <h3 class="text-2xl font-bold text-slate-800">Growth Strategy</h3>
+                    <div class="flex gap-6">
+                        <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center shrink-0 font-bold text-amber-600">01</div>
+                        <div>
+                            <h5 class="font-bold mb-2">Creator Partnerships</h5>
+                            <p class="text-sm text-slate-500">Targeting mid-sized creators on X to showcase the bridge as a native fan-appreciation tool.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6">
+                        <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center shrink-0 font-bold text-amber-600">02</div>
+                        <div>
+                            <h5 class="font-bold mb-2">Incentive Loops</h5>
+                            <p class="text-sm text-slate-500">Reward programs for users who successfully onboard their followers into the decentralized registry.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6">
+                        <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center shrink-0 font-bold text-amber-600">03</div>
+                        <div>
+                            <h5 class="font-bold mb-2">Developer SDK</h5>
+                            <p class="text-sm text-slate-500">Opening our API for other dApps to query social identity maps on Stellar.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative pl-8 border-l-2 border-slate-200">
+                    <div class="mb-12 relative">
+                        <div class="absolute -left-[41px] top-0 w-5 h-5 rounded-full bg-amber-600 border-4 border-white"></div>
+                        <h5 class="font-bold text-slate-900">Q3 2026: Mainnet Deployment</h5>
+                        <p class="text-sm text-slate-500 mt-2">Full integration with USDC and XLM on Stellar Mainnet with verified Soroban contracts.</p>
+                    </div>
+                    <div class="mb-12 relative">
+                        <div class="absolute -left-[41px] top-0 w-5 h-5 rounded-full bg-slate-200 border-4 border-white"></div>
+                        <h5 class="font-bold text-slate-900">Q4 2026: Browser Extensions</h5>
+                        <p class="text-sm text-slate-500 mt-2">Injecting tipping buttons directly into X (Twitter) and Telegram Web interfaces.</p>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute -left-[41px] top-0 w-5 h-5 rounded-full bg-slate-200 border-4 border-white"></div>
+                        <h5 class="font-bold text-slate-900">2027: AI Anti-Sybil Scoring</h5>
+                        <p class="text-sm text-slate-500 mt-2">Implementing AI-driven reputation scores for creators to prevent automated bot-tipping abuse.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-slate-100 py-12">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p class="text-sm text-slate-400">Built for the Stellar Community </p>
+            <div class="flex gap-4">
+                <span class="text-[10px] text-slate-400">Support: Freighter, Albedo, LOBSTR</span>
+                <span class="text-[10px] text-slate-400">Network: Stellar Testnet</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // State Management
+        let currentTab = 'overview';
+
+        function switchTab(tabId) {
+            // UI Updates
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+
+            // Content Visibility
+            document.querySelectorAll('main > section').forEach(el => el.classList.add('hidden'));
+            document.getElementById('content-' + tabId).classList.remove('hidden');
+            
+            currentTab = tabId;
+
+            // Chart re-rendering if visible
+            if (tabId === 'market') {
+                setTimeout(renderMarketChart, 100);
+            }
+        }
+
+        // Chart.js - Gas Fee Comparison
+        let marketChart;
+        function renderMarketChart() {
+            const ctx = document.getElementById('marketChart');
+            if (!ctx) return;
+
+            if (marketChart) marketChart.destroy();
+
+            marketChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Ethereum', 'Polygon', 'Stellar'],
+                    datasets: [{
+                        label: 'Avg. Transaction Fee (USD)',
+                        data: [8.50, 0.05, 0.0001],
+                        backgroundColor: ['#f87171', '#a78bfa', '#d97706'],
+                        borderRadius: 6,
+                        barThickness: 30
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Fee: $' + context.parsed.x.toFixed(4);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'logarithmic',
+                            title: { display: true, text: 'Logarithmic Scale ($)', font: { size: 10 } },
+                            grid: { color: '#f1f5f9' },
+                            ticks: { font: { size: 9 } }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: { font: { weight: 'bold' } }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Init
+        window.onload = () => {
+            switchTab('overview');
+        };
+    </script>
+</body>
+</html>
