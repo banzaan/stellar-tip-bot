@@ -5,12 +5,14 @@
 ## Project Overview & Quick Links
 
 * Live Demo Link: [http://stellartipbot.duckdns.org/)
-* Demo Video Link (1-2 minutes): [https://github.com/banzaan/stellar-tip-bot/blob/main/assets/document_5980801530876402962.mp4]
+* Main Demo video: [https://x.com/_banzaan/status/2082195978820440204]
+* Demo Video2 Link: [https://github.com/banzaan/stellar-tip-bot/blob/main/assets/document_5980801530876402962.mp4]
 * Pitch link: [https://banzaan.github.io/stellar-tip-bot/]
-* X post :  [https://x.com/_banzaan/status/2079546567254568991](https://x.com/_banzaan/status/2079546567254568991)
+* X posts : [https://x.com/_banzaan/status/2079546567254568991](https://x.com/_banzaan/status/2079546567254568991)
+*   post2 : [https://x.com/_banzaan/status/2082197180580774066]
 * Telegram Bot:[https://t.me/stellar_tip_bot](https://t.me/stellar_tip_bot)
 * Public GitHub Repository: [https://github.com/banzaan/stellar-tip-bot](https://github.com/banzaan/stellar-tip-bot)
-* Primary Tech Stack: JavaScript (83.3%), Rust (14.9%), CSS (1.8%), Stellar Soroban SDK.
+* Primary Tech Stack: JavaScript , Rust , CSS , Stellar Soroban SDK.
 
 ### Smart Contract Deployments (Stellar Testnet)
 
@@ -27,7 +29,7 @@
 
 * [x] Public GitHub repository
 * [x] README with complete documentation
-* [x] Minimum 10+ meaningful commits
+* [x] Minimum 20+ meaningful commits
 * [x] Live demo link (Hosted on Railway)
 * [x] Contract deployment address (Registry & Processor provided)
 * [x] Transaction hash for contract interaction (Provided)
@@ -35,7 +37,7 @@
 * [x] Mobile responsive UI
 * [x] CI/CD pipeline running (GitHub Actions)
 * [x] Test output with 3+ passing tests
-* [x] Demo video link (1-2 minutes)
+* [x] Demo video link 
 
 ## Advanced Technical Architecture & Implementation
 
