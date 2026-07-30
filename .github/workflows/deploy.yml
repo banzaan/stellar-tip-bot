@@ -1,0 +1,19 @@
+name: CD Deployment
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Frontend
+        run: |
+          npm ci || npm install
+          npm run build --if-present
+
+      - name: Simulate Deployment
+        run: echo "Deploying frontend and smart contracts..."
