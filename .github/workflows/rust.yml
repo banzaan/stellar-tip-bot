@@ -19,8 +19,8 @@ jobs:
     - name: Install Rust WASM Target
       run: rustup target add wasm32v1-none
 
-    - name: Build WASM Contracts
+    - name: Build WASM Contracts First
       run: cargo build --target wasm32v1-none --release
 
-    - name: Run tests
-      run: cargo test --verbose
+    - name: Run tests with WASM build
+      run: cargo test --release
