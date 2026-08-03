@@ -5,6 +5,7 @@
 ## Project Overview & Quick Links
 
 * Live Demo Link: [http://stellartipbot.duckdns.org/)
+* https://stellartipbot-q0u9nofg3-banzaan1.vercel.app
 * Main Demo video: [https://x.com/_banzaan/status/2082195978820440204]
 * Demo Video2 Link: [https://github.com/banzaan/stellar-tip-bot/blob/main/assets/document_5980801530876402962.mp4]
 * Pitch link: [https://banzaan.github.io/stellar-tip-bot/]
